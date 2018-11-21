@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='py-lcd',
-    version='0.1.0',
+    version='0.1.1',
     description='Python library for LCD',
     author='Masato Mizuta',
     author_email='mst.mizuta@gmail.com',

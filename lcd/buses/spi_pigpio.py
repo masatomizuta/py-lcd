@@ -10,9 +10,10 @@ from .bus import Bus
 class SPI_pigpio(Bus):
     """SPI bus with pigpio"""
 
-    def __init__(self, pi: pigpio.pi, spi_handle: int, reset_pin: int, rs_pin: int):
+    def __init__(self, pi: pigpio.pi, ch: int, baud: int, reset_pin: int, rs_pin: int):
         self.pi = pi
-        self.spi = spi_handle
+        self.ch = ch
+        self.baud = baud
         self.reset_pin = reset_pin
         self.rs_pin = rs_pin
 
@@ -31,11 +32,15 @@ class SPI_pigpio(Bus):
 
         if type(value) is int:
             assert value <= 0xFF
-            self.pi.spi_xfer(self.spi, bytes([value]))
+            buf = bytes([value])
         elif type(value) is bytes:
-            self.pi.spi_xfer(self.spi, value)
+            buf = value
         else:
             raise TypeError()
 
+        spi = self.pi.spi_open(self.ch, self.baud)
+        self.pi.spi_xfer(spi, buf)
+        self.pi.spi_close(spi)
+
     def close(self):
-        self.pi.spi_close(self.spi)
+        pass
